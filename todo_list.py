@@ -5,20 +5,18 @@
 
 #task class
 class Task:
-    def __init__(self, taskName, description, time, isCompleted):
+    def __init__(self, taskName, description, time, priority, isCompleted):
         self.taskName = taskName
         self.description = description
         self.time = time
+        self.priority = priority
         self.isCompleted = isCompleted
     
     def markAsCompleted(self):
         self.isCompleted = True
-
-    def changeCompletionTime(self, newTime):
-        self.time = newTime
     
     def toString(self):
-        return "Task: {}\nDescription: {}\n Time To Complete: {}\n Completed: {} \n".format(self.taskName, self.description, self.time, self.isCompleted)
+        return "Task: {}\nDescription: {}\nTime To Complete: {}\nPriority: {} \nCompleted: {} \n".format(self.taskName, self.description, self.time, self.priority, self.isCompleted)
         
 def main():
 
@@ -39,8 +37,25 @@ def main():
         return False
 
     def addTask(taskList, task):
-        taskList.append(task)
-        print("Added Task.")
+        
+        added = False
+        
+        if len(taskList) == 0:
+            taskList.append(task)
+            added = True
+
+        if added == False:
+            for i in range(0,len(taskList)):
+                if taskList[i].priority <= task.priority:
+                    taskList.insert(i, task)
+                    added = True
+        
+        if added ==  False:
+            taskList.append(task)
+            added = True
+        
+        if added == True:
+            print("Added Task.")
     
     def deleteTask(taskList, taskNumber):
         taskList.pop(taskNumber)
@@ -77,7 +92,8 @@ def main():
             name = input("Enter The Task Name: ")
             description = input("Enter A Description: ")
             time = input("Enter The Time To Complete: ")
-            addTask(taskList, Task(name, description, time, False))
+            priority = int(input("Enter Priority Level: "))
+            addTask(taskList, Task(name, description, time, priority, False))
         elif userInput == "d": 
             taskNumber = int(input("Enter The Task Number To Delete:"))
             deleteTask(taskList, taskNumber-1)
