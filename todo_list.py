@@ -20,6 +20,9 @@ class Task:
     
     def rename(self, newName):
         self.taskName = newName
+    
+    def toUpperCase(self):
+        self.taskName = self.taskName.upper()
         
 def main():
 
@@ -81,6 +84,7 @@ def main():
     print("[c]: Mark Task As Completed")
     print("[cc]: Clear Completed Task")
     print("[r]: Rename Task")
+    print("[u]: Upper-case task")
     print("[q]: To Quit To-Do List")
     
 
@@ -112,6 +116,9 @@ def main():
             taskNumber = int(input("Enter the task number you would like to change the name of: "))
             newName = input("Enter the new name of the task: ")
             taskList[taskNumber - 1].rename(newName)
+        elif userInput == "u":
+            taskNumber = int(input("Enter the task number you would like to uppercase: "))
+            taskList[taskNumber - 1].toUpperCase()
         else:
             print("Invalid Input.")
     
