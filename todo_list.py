@@ -20,7 +20,6 @@ class Task:
         
 def main():
 
-    print("hi")
     taskList = []   
 
     def viewTasks(taskList):
