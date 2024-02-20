@@ -17,10 +17,12 @@ class Task:
     
     def toString(self):
         return "Task: {}\nDescription: {}\nTime To Complete: {}\nPriority: {} \nCompleted: {} \n".format(self.taskName, self.description, self.time, self.priority, self.isCompleted)
+    
+    def rename(self, newName):
+        self.taskName = newName
         
 def main():
 
-    print("hi")
     taskList = []   
 
     def viewTasks(taskList):
@@ -78,7 +80,9 @@ def main():
     print("[d]: Delete a Task")
     print("[c]: Mark Task As Completed")
     print("[cc]: Clear Completed Task")
+    print("[r]: Rename Task")
     print("[q]: To Quit To-Do List")
+    
 
     userInput = ""
     while userInput != "q":
@@ -104,6 +108,10 @@ def main():
         elif userInput == "cc":
             clearCompletedTasks(taskList)
             print("Completed Tasks Have Been Cleared.")
+        elif userInput == "r":
+            taskNumber = int(input("Enter the task number you would like to change the name of: "))
+            newName = input("Enter the new name of the task: ")
+            taskList[taskNumber - 1].rename(newName)
         else:
             print("Invalid Input.")
     
