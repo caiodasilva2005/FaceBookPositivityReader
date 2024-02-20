@@ -90,7 +90,9 @@ def main():
 
     userInput = ""
     while userInput != "q":
+        print("---------------------------------")
         userInput = input("Enter An Option: ")
+        print("---------------------------------")
         if userInput == "v":
             viewTasks(taskList)
         elif userInput == "s":
