@@ -20,7 +20,8 @@ class Task:
         
 def main():
 
-    taskList = [] 
+    print("hi")
+    taskList = []   
 
     def viewTasks(taskList):
         if (len(taskList) == 0):
