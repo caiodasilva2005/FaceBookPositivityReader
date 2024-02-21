@@ -106,7 +106,7 @@ def main():
             priority = int(input("Enter Priority Level: "))
             addTask(taskList, Task(name, description, time, priority, False))
         elif userInput == "d": 
-            taskNumber = int(input("Enter The Task Number To Delete:"))
+            taskNumber = int(input("Enter The Task Number To Delete: "))
             deleteTask(taskList, taskNumber-1)
         elif userInput == "c": 
             taskNumber = int(input("Enter The Task Number of The Completed Task: "))
@@ -115,11 +115,11 @@ def main():
             clearCompletedTasks(taskList)
             print("Completed Tasks Have Been Cleared.")
         elif userInput == "r":
-            taskNumber = int(input("Enter the task number you would like to change the name of: "))
+            taskNumber = int(input("Enter The Task Number To Rename: "))
             newName = input("Enter the new name of the task: ")
             taskList[taskNumber - 1].rename(newName)
         elif userInput == "u":
-            taskNumber = int(input("Enter the task number you would like to uppercase: "))
+            taskNumber = int(input("Enter The Task Number To Convert To Uppercase: "))
             taskList[taskNumber - 1].toUpperCase()
         else:
             print("Invalid Input.")
