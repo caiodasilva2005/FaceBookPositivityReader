@@ -5,9 +5,10 @@ import openai
 page_id = "229568753577594"
 user_access_token = "EAAfJUHChi8UBO0bxM2GZBWDrPSn1ExNzsBYvNXlJgW7PgnZC4jufJUjQ4M9ALZAU96H8bZAU6ZBHH6qwfUEJCIYR5XUFGtmnitevzLiws2ygzZCry75R7nsCtEYXEZAFvEvpPcMQ1D6wd5LDpvZBj9D6rkZAZB0Ll5Nl5Q0c3FuY20NnuDhsX8TOicKPB4"
 page_access_token = "EAAfJUHChi8UBO3smPYYVp3k4aI1nln7NcxtDYDZAacANtE0bQu2ua8eai8GI3jZCmNBVHIFfJ7zULGAIPgK04vmKgzwX527fsohoOWLZBVjhl2VHNsnY8ChZCvIq3FxV2vfqw8eK5bmjviTQM2rGAm0ycXT1EuCCDJ6ccNaKhK0PnPZAQhHrjooLZCWFoUcA0ZD"
-key="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"
+from Key1 import mysk
+#key="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"
 
-openai.api_key = key
+openai.api_key = mysk
 
 def ChatAI(comment):
     chat_completion = openai.ChatCompletion.create(
@@ -19,8 +20,6 @@ def ChatAI(comment):
     
     #print(chat_completion.choices[0].message["content"])
     return chat_completion.choices[0].message["content"]
-    
-
     
 
 def getUser(user_access_token):
