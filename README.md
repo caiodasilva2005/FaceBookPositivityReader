@@ -1,5 +1,5 @@
 Python project for final design project for EECE 2140 by Caio DaSilva and Jack Sweeney.
-~~~~~~~~~~ FACEBOOK POSITIVITY READER ~~~~~~~~~~~~~~~~
+
 This project will fetch data from a FaceBook Page and use its information to determine
 how positive the page is. The information we will be considering:
 likes to follower ratio
@@ -13,4 +13,4 @@ the page name,
 the page image,
 the most positive comment,
 and more.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
