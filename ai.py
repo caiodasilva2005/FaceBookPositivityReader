@@ -16,6 +16,7 @@ def getAiScore(message):
     return chat_completion.choices[0].message["content"]
 
 def getScoreFromMessages(messages):
+    print("click")
     scores = []
     for message in messages:
         score = getAiScore(message)
@@ -29,6 +30,8 @@ def getScoreFromMessages(messages):
     score_sum = 0
     for score in scores:
         score_sum += score
+
+    print(score_sum)
 
     return score_sum
     
