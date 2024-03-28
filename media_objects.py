@@ -4,9 +4,8 @@ class User:
         self.pages = pages
 
 class Page:
-    def __init__(self, id, user):
+    def __init__(self, id):
         self.id = id
-        self.user = user
         self.posts = []
 
 class Post:
@@ -16,7 +15,7 @@ class Post:
         self.reactions = {}
         self.comments = []
 
-class Comments:
+class Comment:
     def __init__(self, id, message):
         self.id = id
         self.message = message

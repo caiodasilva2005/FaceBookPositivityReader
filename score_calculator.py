@@ -1,4 +1,5 @@
 import read_data as rd
+import media_objects as mo
 import ai 
 
 LOVE_SCORE = 10
@@ -9,6 +10,7 @@ SAD_SCORE = -2
 ANGRY_SCORE = -5
 
 def getScoreFromMessage(message):
+    
     score = ai.getAiScore(message)
     try:
         score = int(score)
@@ -17,24 +19,6 @@ def getScoreFromMessage(message):
     
     return score
 
-def getScoreFromMessages(messages):
-
-    scores = []
-    for message in messages:
-        score = ai.getAiScore(message)
-        try:
-            score = int(score)
-            scores.append(score)
-        except ValueError:
-            continue
-    
-    score_sum = 0
-    for score in scores:
-        score_sum += score
-
-    print(score_sum)
-
-    return score_sum 
 
 def getScoreFromReactions(reactions):
 
@@ -48,3 +32,27 @@ def getScoreFromReactions(reactions):
     score += reactions['angry'] * ANGRY_SCORE
 
     return score
+
+def getScoreFromMedia(object):
+    score  = 0
+
+    if object is None:
+        return score
+    
+    score += getScoreFromMessage(object.message)
+    score += getScoreFromReactions(object.reactions)
+
+    return score
+    
+def getPagePositivityScore(page):
+    positivity_score = 0
+
+    posts = page.posts
+    for post in posts:
+        positivity_score += getScoreFromMedia(post)
+        if post is not None:
+            comments = post.comments
+            for comment in comments:
+                positivity_score += getScoreFromMedia(comment)
+    
+    return positivity_score
