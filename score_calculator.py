@@ -1,4 +1,5 @@
 import read_data as rd
+import media_objects as mo
 import ai 
 
 LOVE_SCORE = 10
@@ -26,6 +27,7 @@ def getScoreFromMessages(messages):
             score = int(score)
             scores.append(score)
         except ValueError:
+            scores.append(0)
             continue
     
     score_sum = 0
@@ -48,3 +50,30 @@ def getScoreFromReactions(reactions):
     score += reactions['angry'] * ANGRY_SCORE
 
     return score
+
+def page_init(page):
+
+    rd.getPagePhoto(page)
+
+    page_posts = rd.getPostsFromPage(page)
+    posts = []
+    for i in range(0 , len(page_posts)):
+        post = page_posts[i]
+        try:
+            posts.append(mo.Post(post['id'], post['message']))
+        except KeyError:
+            continue
+
+    for post in posts:
+        post_comments = rd.getCommentsFromPost(post)
+        comments = []
+        for i in range(0, len(post_comments)):
+            comment = post_comments[i]
+            comments.append(mo.Comment(comment['id'], comment['message']))
+        
+        post.comments = comments
+        for comment in post.comments:
+            post.comments.reaction = rd.getReactions(comment)
+        
+            
+        post.reactions = rd.getReactions(post)
