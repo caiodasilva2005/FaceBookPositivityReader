@@ -1,10 +1,13 @@
 import media_objects as mo
 import read_data as rd
+import score_calculator as sc
 
 def main():
     page = rd.page_init()
-    print(page.posts[1].comments[0].message)
+    score = sc.getPagePositivityScore(page)
 
+    print(score)
+    
 main()
     
     

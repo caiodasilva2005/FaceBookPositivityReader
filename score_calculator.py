@@ -10,6 +10,7 @@ SAD_SCORE = -2
 ANGRY_SCORE = -5
 
 def getScoreFromMessage(message):
+    
     score = ai.getAiScore(message)
     try:
         score = int(score)
@@ -18,25 +19,6 @@ def getScoreFromMessage(message):
     
     return score
 
-def getScoreFromMessages(messages):
-
-    scores = []
-    for message in messages:
-        score = ai.getAiScore(message)
-        try:
-            score = int(score)
-            scores.append(score)
-        except ValueError:
-            scores.append(0)
-            continue
-    
-    score_sum = 0
-    for score in scores:
-        score_sum += score
-
-    print(score_sum)
-
-    return score_sum 
 
 def getScoreFromReactions(reactions):
 
@@ -51,29 +33,26 @@ def getScoreFromReactions(reactions):
 
     return score
 
-def page_init(page):
+def getScoreFromMedia(object):
+    score  = 0
 
-    rd.getPagePhoto(page)
+    if object is None:
+        return score
+    
+    score += getScoreFromMessage(object.message)
+    score += getScoreFromReactions(object.reactions)
 
-    page_posts = rd.getPostsFromPage(page)
-    posts = []
-    for i in range(0 , len(page_posts)):
-        post = page_posts[i]
-        try:
-            posts.append(mo.Post(post['id'], post['message']))
-        except KeyError:
-            continue
+    return score
+    
+def getPagePositivityScore(page):
+    positivity_score = 0
 
+    posts = page.posts
     for post in posts:
-        post_comments = rd.getCommentsFromPost(post)
-        comments = []
-        for i in range(0, len(post_comments)):
-            comment = post_comments[i]
-            comments.append(mo.Comment(comment['id'], comment['message']))
-        
-        post.comments = comments
-        for comment in post.comments:
-            post.comments.reaction = rd.getReactions(comment)
-        
-            
-        post.reactions = rd.getReactions(post)
+        positivity_score += getScoreFromMedia(post)
+        if post is not None:
+            comments = post.comments
+            for comment in comments:
+                positivity_score += getScoreFromMedia(comment)
+    
+    return positivity_score
