@@ -6,6 +6,9 @@ def main():
     page = rd.page_init()
     score = sc.getPagePositivityScore(page)
 
+    print(sc.getMostPositiveMedia(sc.__all_comments__))
+    print(sc.getMostPositiveMedia(sc.__all_posts__))
+    print(sc.__all_reactions__)
     print(score)
     
 main()

@@ -9,6 +9,10 @@ HAHA_SCORE = 1
 SAD_SCORE = -2
 ANGRY_SCORE = -5
 
+__all_comments__ = {}
+__all_posts__ = {}
+__all_reactions__ = {"love": 0, "like": 0, "wow": 0, "haha": 0, "sad": 0, "angry": 0}
+
 def getScoreFromMessage(message):
     
     score = ai.getAiScore(message)
@@ -25,20 +29,28 @@ def getScoreFromReactions(reactions):
     score = 0
     
     score += reactions['love'] * LOVE_SCORE
+    __all_reactions__['love'] += reactions['love']
+    
     score += reactions['like'] * LIKE_SCORE
+    __all_reactions__['like'] += reactions['like']
+
     score += reactions['wow'] * WOW_SCORE
+    __all_reactions__['wow'] += reactions['wow']
+
     score += reactions['haha'] * HAHA_SCORE
+    __all_reactions__['haha'] += reactions['haha']
+
     score += reactions['sad'] * SAD_SCORE
-    score += reactions['angry'] * ANGRY_SCORE
+    __all_reactions__['sad'] += reactions['sad']
+
+    score += reactions['angry'] * ANGRY_SCORE 
+    __all_reactions__['angry'] += reactions['angry']
 
     return score
 
 def getScoreFromMedia(object):
     score  = 0
 
-    if object is None:
-        return score
-    
     score += getScoreFromMessage(object.message)
     score += getScoreFromReactions(object.reactions)
 
@@ -49,10 +61,26 @@ def getPagePositivityScore(page):
 
     posts = page.posts
     for post in posts:
-        positivity_score += getScoreFromMedia(post)
         if post is not None:
+            post_score = getScoreFromMedia(post)
+            positivity_score += positivity_score
+            __all_posts__.update({post.message: post_score})
             comments = post.comments
             for comment in comments:
-                positivity_score += getScoreFromMedia(comment)
-    
+                comment_score = getScoreFromMedia(comment)
+                positivity_score += comment_score
+                __all_comments__.update({comment.message: comment_score})
+        
     return positivity_score
+
+def getMostPositiveMedia(object):
+    maxComment  = ""
+    maxScore = 0
+    for comment, score in object.items():
+        if score > maxScore:
+            maxScore = score
+            maxComment = comment
+    
+    return maxComment
+
+    
