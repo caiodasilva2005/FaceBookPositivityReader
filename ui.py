@@ -5,6 +5,8 @@ import score_calculator as sc
 IMG_PATH = "./photos/photo.jpg"
 POS_SCORE_DISPLAY = "Positivity Score"
 POS_POST_DISPLAY = "Most Positive Post"
+POS_COMMENT_DISPLAY = "Most Positive Comment"
+TOTAL_REACTIONS_DISPLAY = "Total Reactions"
 
 __all_displays__ = []
 
@@ -29,10 +31,21 @@ class InfoDisplay:
 
 def updateDisplays(page):
     for display in __all_displays__:
-        if display.topic == POS_SCORE_DISPLAY:
+        topic = display.topic
+        if topic == POS_SCORE_DISPLAY:
             display.infoLabel['text'] = sc.getPagePositivityScore(page) 
-        elif display.topic == POS_POST_DISPLAY:
+        elif topic == POS_POST_DISPLAY:
             display.infoLabel['text'] = sc.getMostPositiveMedia(sc.__all_posts__)
+        elif topic == POS_COMMENT_DISPLAY:
+            display.infoLabel['text'] = sc.getMostPositiveMedia(sc.__all_comments__)
+        elif topic == TOTAL_REACTIONS_DISPLAY:
+            display.infoLabel['text'] = formatReactions(sc.__all_reactions__)
+
+def formatReactions(reactions):
+    reaction_format = ""
+    for key, value, in reactions.items():
+        reaction_format += f"{key}: {value} \n" 
+    return reaction_format
     
 def init(page):
     
@@ -56,9 +69,11 @@ def init(page):
 
     InfoDisplay(infoFrame, POS_SCORE_DISPLAY, 0, 0)
     InfoDisplay(infoFrame, POS_POST_DISPLAY, 1, 0)
-
+    InfoDisplay(infoFrame, POS_COMMENT_DISPLAY, 3, 0)
+    InfoDisplay(infoFrame, TOTAL_REACTIONS_DISPLAY, 4, 0)
+    
     posButton = tk.Button(window, text="Get Positivity", command=lambda: updateDisplays(page))
-    posButton.grid(row=2, column=0, sticky="ew", padx=5, pady=5)
+    posButton.grid(row=2, column=0, padx=5, pady=5)
 
 
     window.mainloop()
