@@ -46,10 +46,22 @@ def formatReactions(reactions):
     for key, value, in reactions.items():
         reaction_format += f"{key}: {value} \n" 
     return reaction_format
-    
+
+def drawScoreBar(score): 
+    # init tk
+    root = tk.Tk()
+
+    # create canvas
+    myCanvas = tk.Canvas(root, bg="white", height=340, width=80)
+
+    arc = myCanvas.create_rectangle(0, score, 100, 350 , outline = "black", fill = "lightblue", width = 2)
+    # add to window and show
+    myCanvas.pack()
+    root.mainloop()
+
 def init(page):
     
-    window = tk.Tk();
+    window = tk.Tk()
     window.title("FaceBook Positivity Reader")
     frame = tk.Frame(window, width=100, height=100)
     frame.grid(row=0, column=0, sticky="nsew")
