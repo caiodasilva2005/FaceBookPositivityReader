@@ -20,7 +20,7 @@ class InfoDisplay:
     
     def makeDisplay(self):
         topicLabel = tk.Label(self.frame, text=self.topic + ": ")
-        topicLabel.grid(row=self.topic_row, column=self.topic_col, sticky="e")
+        topicLabel.grid(row=self.topic_row, column=self.topic_col, sticky="w")
 
         infoLabel = tk.Label(self.frame)
         infoLabel.grid(row=self.topic_row, column=self.topic_col+1, sticky="ew")
@@ -46,26 +46,30 @@ def formatReactions(reactions):
     for key, value, in reactions.items():
         reaction_format += f"{key}: {value} \n" 
     return reaction_format
+
+def makeFrame(window, width, height, row, col):
+    frame = tk.Frame(window, width=width, height=height)
+    frame.grid(row=row, column=col, sticky="nsew")
+
+    return frame
     
 def init(page):
     
     window = tk.Tk();
     window.title("FaceBook Positivity Reader")
-    frame = tk.Frame(window, width=100, height=100)
-    frame.grid(row=0, column=0, sticky="nsew")
+    title_frame = makeFrame(window, 100, 100, 0, 0)
 
     img = ImageTk.PhotoImage(Image.open(IMG_PATH))
 
     #imgLabel = tk.Label(frame, image = img)
     #imgLabel.grid(row=0, column=0, sticky="nsew")
 
-    img_label = tk.Label(frame, text="IMAGE")
+    img_label = tk.Label(title_frame, text="IMAGE")
     img_label.pack()
-    pageNameLabel = tk.Label(frame, text="PAGE NAME")
+    pageNameLabel = tk.Label(title_frame, text="PAGE NAME")
     pageNameLabel.pack()
 
-    infoFrame = tk.Frame(window, width=300, height=300)
-    infoFrame.grid(row=1, column=0, sticky="nsew")
+    infoFrame = makeFrame(window, 300, 300, 1, 0)
 
     InfoDisplay(infoFrame, POS_SCORE_DISPLAY, 0, 0)
     InfoDisplay(infoFrame, POS_POST_DISPLAY, 1, 0)
