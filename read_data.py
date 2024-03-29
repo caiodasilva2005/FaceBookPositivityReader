@@ -1,5 +1,6 @@
 import requests
 import json
+import media_objects as mo
 
 PAGE_ID = "229568753577594"
 USER_TOKEN = "EAAfJUHChi8UBO0bxM2GZBWDrPSn1ExNzsBYvNXlJgW7PgnZC4jufJUjQ4M9ALZAU96H8bZAU6ZBHH6qwfUEJCIYR5XUFGtmnitevzLiws2ygzZCry75R7nsCtEYXEZAFvEvpPcMQ1D6wd5LDpvZBj9D6rkZAZB0Ll5Nl5Q0c3FuY20NnuDhsX8TOicKPB4"
@@ -38,11 +39,8 @@ def getCommentsFromPost(post):
     data = json.loads(response.text)
 
     comment_data = data['data']
-    comments = []
-    for comment in comment_data:
-        comments.append(comment['message'])
 
-    return comments
+    return comment_data
 
 def getReactions(object):
 
@@ -75,4 +73,53 @@ def getReactions(object):
             reaction_dict["angry"] = count
     
     return reaction_dict
-        
+
+def getPagePhoto(page):
+
+    page_photo_url = f"https://graph.facebook.com/v19.0/{page.id}/photos?access_token={PAGE_TOKEN}"  
+
+    response = requests.request("GET", page_photo_url);
+
+    page_photo_data = json.loads(response.text)
+    photo_id = page_photo_data['data'][0]['id']
+
+    photo_url = f"https://graph.facebook.com/v19.0/{photo_id}/picture?access_token={PAGE_TOKEN}"
+    response = requests.request("GET", photo_url);
+
+    with open('./photos/photo.jpg', 'wb') as f:
+        f.write(response.content)
+
+def page_init():
+    page = mo.Page(PAGE_ID)
+    page.posts = posts_init(page)
+    
+    return page
+
+def posts_init(page):
+    page_posts = getPostsFromPage(page)
+    posts = []
+    for i in range(0, len(page_posts)):
+        post = page_posts[i]
+        try:
+            posts.append(mo.Post(post['id'], post['message']))
+        except KeyError:
+            posts.append(None)
+        if (posts[i]):
+            post = posts[i]
+            posts[i].reactions = getReactions(post)
+            posts[i].comments = comments_init(post)
+    
+    return posts
+    
+
+def comments_init(post):
+    post_comments = getCommentsFromPost(post)
+
+    comments = []
+    for i in range(0, len(post_comments)):
+        comment = post_comments[i]
+        comments.append(mo.Comment(comment['id'], comment['message']))
+        comment = comments[i]
+        comments[i].reactions = getReactions(comment)
+    
+    return comments
