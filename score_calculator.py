@@ -74,13 +74,13 @@ def getPagePositivityScore(page):
     return positivity_score
 
 def getMostPositiveMedia(object):
-    maxComment  = ""
+    maxMessage  = ""
     maxScore = 0
-    for comment, score in object.items():
+    for message, score in object.items():
         if score > maxScore:
             maxScore = score
-            maxComment = comment
+            maxMessage = message
     
-    return maxComment
+    return maxMessage
 
     
