@@ -2,6 +2,8 @@ import read_data as rd
 import media_objects as mo
 import ai 
 
+MAX_SCORE = 1000
+
 LOVE_SCORE = 10
 LIKE_SCORE = 5
 WOW_SCORE = 2
@@ -70,6 +72,10 @@ def getPagePositivityScore(page):
                 comment_score = getScoreFromMedia(comment)
                 positivity_score += comment_score
                 __all_comments__.update({comment.message: comment_score})
+    
+    positivity_score /= len(__all_posts__)    
+    if (positivity_score > MAX_SCORE):
+        positivity_score = MAX_SCORE
         
     return positivity_score
 
