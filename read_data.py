@@ -83,18 +83,20 @@ def getReactions(page, object):
 
 def getPagePhoto(page):
 
-    page_photo_url = f"https://graph.facebook.com/v19.0/{page.id}/photos?access_token={PAGE_TOKEN}"  
+    page_photo_url = f"https://graph.facebook.com/v19.0/{page.id}/photos?access_token={page.token}"  
 
     response = requests.request("GET", page_photo_url);
 
     page_photo_data = json.loads(response.text)
     photo_id = page_photo_data['data'][0]['id']
 
-    photo_url = f"https://graph.facebook.com/v19.0/{photo_id}/picture?access_token={PAGE_TOKEN}"
+    photo_url = f"https://graph.facebook.com/v19.0/{photo_id}/picture?access_token={page.token}"
     response = requests.request("GET", photo_url);
 
-    with open('./photos/photo.jpg', 'wb') as f:
+    with open(page.photo_path, 'wb') as f:
         f.write(response.content)
+    
+    return response
 
 def user_init():
     user_data = getUser()
@@ -108,10 +110,10 @@ def page_init(user):
     pages = []
     for i in range(0, len(user_pages)):
         page = user_pages[i]
-        print(page)
         pages.append(mo.Page(page['id'], page['name'], page['access_token']))
         page = pages[i]
-        pages[i].posts = posts_init(page)
+        page.photo_path = f"./photos/photo{i}.jpg"
+        page.posts = posts_init(page)
     
     return pages
 

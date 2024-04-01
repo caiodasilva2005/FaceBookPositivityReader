@@ -10,6 +10,7 @@ class Page:
         self.id = id
         self.name = name
         self.token = token
+        self.photo_path = ""
         self.posts = []
 
 class Post:
