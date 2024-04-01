@@ -64,13 +64,13 @@ def drawScoreBar(window):
     return myCanvas
 
 def init(page):
-    
+
     window = tk.Tk()
     window.title("FaceBook Positivity Reader")
     window.configure(bg="light blue")
     title_frame = makeFrame(window, 100, 100, 0, 0)
-
-    img = Image.open(IMG_PATH)
+    
+    img = Image.open(page.photo_path)
     desired_width = 100 
     desired_height = 75
     img = img.resize((desired_width, desired_height), Image.LANCZOS)
@@ -79,7 +79,7 @@ def init(page):
 
     img_label = tk.Label(title_frame, image=img, padx=2, pady=2)
     img_label.grid(row=0, column=0, sticky="nsew")
-    pageNameLabel = tk.Label(title_frame, text="TEST PAGE", font=("Arial", 10, "bold"), bg="light blue")
+    pageNameLabel = tk.Label(title_frame, text=page.name, font=("Arial", 10, "bold"), bg="light blue")
     pageNameLabel.grid(row=1, column=0, sticky="ew")
 
     infoFrame = makeFrame(window, 300, 300, 1, 0)

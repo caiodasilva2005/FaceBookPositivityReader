@@ -1,11 +1,16 @@
 class User:
-    def __init__(self, id, pages):
+    def __init__(self, id, name, token):
         self.id = id
-        self.pages = pages
+        self.name = name
+        self.token = token
+        self.pages = []
 
 class Page:
-    def __init__(self, id):
+    def __init__(self, id, name, token):
         self.id = id
+        self.name = name
+        self.token = token
+        self.photo_path = ""
         self.posts = []
 
 class Post:

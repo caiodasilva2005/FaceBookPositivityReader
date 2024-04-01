@@ -1,10 +1,9 @@
 import requests
 import json
 import media_objects as mo
+from Key1 import USER_TOKEN, PAGE_TOKEN
 
 PAGE_ID = "229568753577594"
-USER_TOKEN = "EAAfJUHChi8UBO0bxM2GZBWDrPSn1ExNzsBYvNXlJgW7PgnZC4jufJUjQ4M9ALZAU96H8bZAU6ZBHH6qwfUEJCIYR5XUFGtmnitevzLiws2ygzZCry75R7nsCtEYXEZAFvEvpPcMQ1D6wd5LDpvZBj9D6rkZAZB0Ll5Nl5Q0c3FuY20NnuDhsX8TOicKPB4"
-PAGE_TOKEN = "EAAfJUHChi8UBO3smPYYVp3k4aI1nln7NcxtDYDZAacANtE0bQu2ua8eai8GI3jZCmNBVHIFfJ7zULGAIPgK04vmKgzwX527fsohoOWLZBVjhl2VHNsnY8ChZCvIq3FxV2vfqw8eK5bmjviTQM2rGAm0ycXT1EuCCDJ6ccNaKhK0PnPZAQhHrjooLZCWFoUcA0ZD"
 
 def getUser():
     
@@ -14,12 +13,20 @@ def getUser():
     
     data = json.loads(response.text)
 
-    return data["id"]
+    return data
+
+def getPages(user):
+    url = f"https://graph.facebook.com/v19.0/{user.id}/accounts?access_token={USER_TOKEN}"
+    response = requests.request("GET", url)
+    data = json.loads(response.text)
+    pages = data["data"]
+    
+    return pages
 
     
 def getPostsFromPage(page):
     
-    url = f"https://graph.facebook.com/v19.0/{page.id}/feed?access_token={PAGE_TOKEN}"
+    url = f"https://graph.facebook.com/v19.0/{page.id}/feed?access_token={page.token}"
 
     response = requests.request("GET", url)
 
@@ -30,9 +37,9 @@ def getPostsFromPage(page):
     return posts
         
 
-def getCommentsFromPost(post):
+def getCommentsFromPost(page, post):
     
-    url = f"https://graph.facebook.com/v19.0/{post.id}/comments?access_token={PAGE_TOKEN}"
+    url = f"https://graph.facebook.com/v19.0/{post.id}/comments?access_token={page.token}"
 
     response = requests.request("GET", url);
 
@@ -42,14 +49,14 @@ def getCommentsFromPost(post):
 
     return comment_data
 
-def getReactions(object):
+def getReactions(page, object):
 
-    url_love = f"https://graph.facebook.com/{object.id}?fields=reactions.type(LOVE).limit(0).summary(total_count)&access_token={PAGE_TOKEN}"
-    url_like = f"https://graph.facebook.com/{object.id}?fields=reactions.type(LIKE).limit(0).summary(total_count)&access_token={PAGE_TOKEN}"
-    url_wow = f"https://graph.facebook.com/{object.id}?fields=reactions.type(WOW).limit(0).summary(total_count)&access_token={PAGE_TOKEN}"
-    url_haha = f"https://graph.facebook.com/{object.id}?fields=reactions.type(HAHA).limit(0).summary(total_count)&access_token={PAGE_TOKEN}"
-    url_haha = f"https://graph.facebook.com/{object.id}?fields=reactions.type(SAD).limit(0).summary(total_count)&access_token={PAGE_TOKEN}"
-    url_angry = f"https://graph.facebook.com/{object.id}?fields=reactions.type(ANGRY).limit(0).summary(total_count)&access_token={PAGE_TOKEN}"
+    url_love = f"https://graph.facebook.com/{object.id}?fields=reactions.type(LOVE).limit(0).summary(total_count)&access_token={page.token}"
+    url_like = f"https://graph.facebook.com/{object.id}?fields=reactions.type(LIKE).limit(0).summary(total_count)&access_token={page.token}"
+    url_wow = f"https://graph.facebook.com/{object.id}?fields=reactions.type(WOW).limit(0).summary(total_count)&access_token={page.token}"
+    url_haha = f"https://graph.facebook.com/{object.id}?fields=reactions.type(HAHA).limit(0).summary(total_count)&access_token={page.token}"
+    url_haha = f"https://graph.facebook.com/{object.id}?fields=reactions.type(SAD).limit(0).summary(total_count)&access_token={page.token}"
+    url_angry = f"https://graph.facebook.com/{object.id}?fields=reactions.type(ANGRY).limit(0).summary(total_count)&access_token={page.token}"
 
     urls = [url_love, url_like, url_wow, url_haha, url_angry]
     reaction_dict = {"love": 0, "like": 0, "wow": 0, "haha": 0, "sad": 0, "angry": 0}
@@ -76,24 +83,39 @@ def getReactions(object):
 
 def getPagePhoto(page):
 
-    page_photo_url = f"https://graph.facebook.com/v19.0/{page.id}/photos?access_token={PAGE_TOKEN}"  
+    page_photo_url = f"https://graph.facebook.com/v19.0/{page.id}/photos?access_token={page.token}"  
 
     response = requests.request("GET", page_photo_url);
 
     page_photo_data = json.loads(response.text)
     photo_id = page_photo_data['data'][0]['id']
 
-    photo_url = f"https://graph.facebook.com/v19.0/{photo_id}/picture?access_token={PAGE_TOKEN}"
+    photo_url = f"https://graph.facebook.com/v19.0/{photo_id}/picture?access_token={page.token}"
     response = requests.request("GET", photo_url);
 
-    with open('./photos/photo.jpg', 'wb') as f:
+    with open(page.photo_path, 'wb') as f:
         f.write(response.content)
-
-def page_init():
-    page = mo.Page(PAGE_ID)
-    page.posts = posts_init(page)
     
-    return page
+    return response
+
+def user_init():
+    user_data = getUser()
+    user = mo.User(user_data['id'], user_data['name'], USER_TOKEN)
+    user.pages = page_init(user)
+    
+    return user
+
+def page_init(user):
+    user_pages = getPages(user)
+    pages = []
+    for i in range(0, len(user_pages)):
+        page = user_pages[i]
+        pages.append(mo.Page(page['id'], page['name'], page['access_token']))
+        page = pages[i]
+        page.photo_path = f"./photos/photo{i}.jpg"
+        page.posts = posts_init(page)
+    
+    return pages
 
 def posts_init(page):
     page_posts = getPostsFromPage(page)
@@ -106,20 +128,20 @@ def posts_init(page):
             posts.append(None)
         if (posts[i]):
             post = posts[i]
-            posts[i].reactions = getReactions(post)
-            posts[i].comments = comments_init(post)
+            posts[i].reactions = getReactions(page, post)
+            posts[i].comments = comments_init(page, post)
     
     return posts
     
 
-def comments_init(post):
-    post_comments = getCommentsFromPost(post)
+def comments_init(page, post):
+    post_comments = getCommentsFromPost(page, post)
 
     comments = []
     for i in range(0, len(post_comments)):
         comment = post_comments[i]
         comments.append(mo.Comment(comment['id'], comment['message']))
         comment = comments[i]
-        comments[i].reactions = getReactions(comment)
+        comments[i].reactions = getReactions(page, comment)
     
     return comments
