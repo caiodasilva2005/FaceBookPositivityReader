@@ -3,8 +3,8 @@ import ui
 
 def main():
 
-    page = rd.page_init()
-    ui.init(page)
+    user = rd.user_init()
+    ui.init(user.pages[1])
     
 main()
     

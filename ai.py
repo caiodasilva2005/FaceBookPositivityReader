@@ -1,8 +1,8 @@
 import openai
-from Key1 import mysk
+from Key1 import MYSK
 
 
-openai.api_key = mysk
+openai.api_key = MYSK
 AI_TOKENS = 5
 
 def getAiScore(message):
@@ -15,23 +15,4 @@ def getAiScore(message):
     
     return chat_completion.choices[0].message["content"]
 
-def getScoreFromMessages(messages):
-    print("click")
-    scores = []
-    for message in messages:
-        score = getAiScore(message)
-        try:
-            score = int(score)
-            scores.append(score)
-        except ValueError:
-            print("invalid score")
-            continue
-    
-    score_sum = 0
-    for score in scores:
-        score_sum += score
-
-    print(score_sum)
-
-    return score_sum
     
