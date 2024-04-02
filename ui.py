@@ -23,7 +23,7 @@ class InfoDisplay:
         topicLabel.grid(row=self.topic_row, column=self.topic_col, sticky="w", pady=10)
 
         infoLabel = tk.Label(self.frame, bg="light blue")
-        infoLabel.grid(row=self.topic_row, column=self.topic_col+1, sticky="ew")
+        infoLabel.grid(row=self.topic_row, column=self.topic_col+1, sticky="w")
 
         __all_displays__.append(self)
 

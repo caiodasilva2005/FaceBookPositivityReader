@@ -1,7 +1,7 @@
 import requests
 import json
 import media_objects as mo
-from Key1 import USER_TOKEN, PAGE_TOKEN
+from Key1 import USER_TOKEN
 
 PAGE_ID = "229568753577594"
 
@@ -99,6 +99,7 @@ def getPagePhoto(page):
     return response
 
 def user_init():
+    print("Initializing User...")
     user_data = getUser()
     user = mo.User(user_data['id'], user_data['name'], USER_TOKEN)
     user.pages = page_init(user)
@@ -112,6 +113,7 @@ def page_init(user):
         page = user_pages[i]
         pages.append(mo.Page(page['id'], page['name'], page['access_token']))
         page = pages[i]
+        print("Initializing {}...".format(page.name))
         page.photo_path = f"./photos/photo{i}.jpg"
         page.posts = posts_init(page)
     

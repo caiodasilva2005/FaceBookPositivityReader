@@ -73,7 +73,8 @@ def getPagePositivityScore(page):
                 positivity_score += comment_score
                 __all_comments__.update({comment.message: comment_score})
     
-    positivity_score /= len(__all_posts__)    
+    positivity_score /= (len(__all_posts__) + len(__all_comments__))
+    positivity_score = round(positivity_score, 2)    
     if (positivity_score > MAX_SCORE):
         positivity_score = MAX_SCORE
         
