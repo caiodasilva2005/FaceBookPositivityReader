@@ -3,8 +3,6 @@ import json
 import media_objects as mo
 from Key1 import USER_TOKEN
 
-PAGE_ID = "229568753577594"
-
 def getUser():
     
     url = f"https://graph.facebook.com/v19.0/me?fields=id,name&access_token={USER_TOKEN}"
@@ -16,9 +14,13 @@ def getUser():
     return data
 
 def getPages(user):
+    
     url = f"https://graph.facebook.com/v19.0/{user.id}/accounts?access_token={USER_TOKEN}"
+    
     response = requests.request("GET", url)
+    
     data = json.loads(response.text)
+    
     pages = data["data"]
     
     return pages
@@ -120,6 +122,7 @@ def page_init(user):
     return pages
 
 def posts_init(page):
+    print("Intializing Posts...")
     page_posts = getPostsFromPage(page)
     posts = []
     for i in range(0, len(page_posts)):
@@ -137,6 +140,7 @@ def posts_init(page):
     
 
 def comments_init(page, post):
+    print("Intializing Comment...")
     post_comments = getCommentsFromPost(page, post)
 
     comments = []
