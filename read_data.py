@@ -115,17 +115,17 @@ def page_init(user):
         page = user_pages[i]
         pages.append(mo.Page(page['id'], page['name'], page['access_token']))
         page = pages[i]
-        print("Initializing {}...".format(page.name))
+        print("Scraping {}...".format(page.name))
         page.photo_path = f"./photos/photo{i}.jpg"
         page.posts = posts_init(page)
     
     return pages
 
 def posts_init(page):
-    print("Intializing Posts...")
     page_posts = getPostsFromPage(page)
     posts = []
     for i in range(0, len(page_posts)):
+        print("Scraping Post...")
         post = page_posts[i]
         try:
             posts.append(mo.Post(post['id'], post['message']))
@@ -140,7 +140,7 @@ def posts_init(page):
     
 
 def comments_init(page, post):
-    print("Intializing Comment...")
+    print("Scraping Comment...")
     post_comments = getCommentsFromPost(page, post)
 
     comments = []
