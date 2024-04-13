@@ -5,6 +5,7 @@ from Key1 import MYSK
 openai.api_key = MYSK
 AI_TOKENS = 5
 
+# Uses ChatGPT 3.5 to repspond with positivity score for a message
 def getAiScore(message):
     chat_completion = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",

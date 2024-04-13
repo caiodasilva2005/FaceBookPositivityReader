@@ -3,6 +3,7 @@ import json
 import media_objects as mo
 from Key1 import USER_TOKEN
 
+# fetches user data
 def getUser():
     
     url = f"https://graph.facebook.com/v19.0/me?fields=id,name&access_token={USER_TOKEN}"
@@ -13,6 +14,7 @@ def getUser():
 
     return data
 
+# fetches pages from user
 def getPages(user):
     
     url = f"https://graph.facebook.com/v19.0/{user.id}/accounts?access_token={USER_TOKEN}"
@@ -25,7 +27,7 @@ def getPages(user):
     
     return pages
 
-    
+# fetches posts from page
 def getPostsFromPage(page):
     
     url = f"https://graph.facebook.com/v19.0/{page.id}/feed?access_token={page.token}"
@@ -38,7 +40,7 @@ def getPostsFromPage(page):
     
     return posts
         
-
+# fetches comments from post
 def getCommentsFromPost(page, post):
     
     url = f"https://graph.facebook.com/v19.0/{post.id}/comments?access_token={page.token}"
@@ -51,6 +53,7 @@ def getCommentsFromPost(page, post):
 
     return comment_data
 
+#gets reactions from a Post or Comment object
 def getReactions(page, object):
 
     url_love = f"https://graph.facebook.com/{object.id}?fields=reactions.type(LOVE).limit(0).summary(total_count)&access_token={page.token}"
@@ -68,6 +71,7 @@ def getReactions(page, object):
         data = json.loads(response.text)
         count = data['reactions']['summary']['total_count']
 
+        #updates dictionary with total count of all reactions
         if "LOVE" in url:
             reaction_dict["love"] = count
         elif "LIKE" in url:
@@ -83,6 +87,7 @@ def getReactions(page, object):
     
     return reaction_dict
 
+# gets the profile page photo from a page
 def getPagePhoto(page):
 
     page_photo_url = f"https://graph.facebook.com/v19.0/{page.id}/photos?access_token={page.token}"  
@@ -95,11 +100,12 @@ def getPagePhoto(page):
     photo_url = f"https://graph.facebook.com/v19.0/{photo_id}/picture?access_token={page.token}"
     response = requests.request("GET", photo_url);
 
-    with open(page.photo_path, 'wb') as f:
+    with open(page.photo_path, 'wb') as f: #writes the page into /photos/<photo_path>
         f.write(response.content)
     
     return response
 
+# intitializing user 
 def user_init():
     print("Initializing User...")
     user_data = getUser()
@@ -108,6 +114,7 @@ def user_init():
     
     return user
 
+# intitializing page
 def page_init(user):
     user_pages = getPages(user)
     pages = []
@@ -121,6 +128,7 @@ def page_init(user):
     
     return pages
 
+# intitializing posts
 def posts_init(page):
     page_posts = getPostsFromPage(page)
     posts = []
@@ -138,7 +146,7 @@ def posts_init(page):
     
     return posts
     
-
+# intitializing comments 
 def comments_init(page, post):
     print("Scraping Comment...")
     post_comments = getCommentsFromPost(page, post)

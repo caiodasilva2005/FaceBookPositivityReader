@@ -2,19 +2,21 @@ import read_data as rd
 import media_objects as mo
 import ai 
 
-MAX_SCORE = 1000
+MAX_SCORE = 1000 # max positivity score
 
-LOVE_SCORE = 10
+# reaction weights
+LOVE_SCORE = 10 
 LIKE_SCORE = 5
 WOW_SCORE = 2
 HAHA_SCORE = 1
 SAD_SCORE = -2
 ANGRY_SCORE = -5
 
-__all_comments__ = {}
-__all_posts__ = {}
-__all_reactions__ = {"love": 0, "like": 0, "wow": 0, "haha": 0, "sad": 0, "angry": 0}
+__all_comments__ = {} # stores every comment with its pos score
+__all_posts__ = {} # stores every post message with its pos score
+__all_reactions__ = {"love": 0, "like": 0, "wow": 0, "haha": 0, "sad": 0, "angry": 0} # stores all reactions
 
+#places message into ai to receive score from a Post or Comment message
 def getScoreFromMessage(message):
     
     score = ai.getAiScore(message)
@@ -25,7 +27,7 @@ def getScoreFromMessage(message):
     
     return score
 
-
+#gets score from the reactions from a Post or Comment object
 def getScoreFromReactions(reactions):
 
     score = 0
@@ -50,14 +52,16 @@ def getScoreFromReactions(reactions):
 
     return score
 
+# gets the total scofre form a Post or Comment Object
 def getScoreFromMedia(object):
-    score  = 0
+    score = 0
 
     score += getScoreFromMessage(object.message)
     score += getScoreFromReactions(object.reactions)
 
     return score
-    
+
+# Gets total accumulated score from all media objects in page
 def getPagePositivityScore(page):
     positivity_score = 0
 
@@ -73,13 +77,15 @@ def getPagePositivityScore(page):
                 positivity_score += comment_score
                 __all_comments__.update({comment.message: comment_score})
     
-    positivity_score /= (len(__all_posts__) + len(__all_comments__))
+    # averages the pos score based on the number of media objects on the page
+    positivity_score /= (len(__all_posts__) + len(__all_comments__)) 
     positivity_score = round(positivity_score, 2)    
-    if (positivity_score > MAX_SCORE):
+    if (positivity_score > MAX_SCORE): # pos score does not exceed max score
         positivity_score = MAX_SCORE
         
     return positivity_score
 
+# finds the most postive media object message from a dictionary
 def getMostPositiveMedia(object):
     maxMessage  = ""
     maxScore = 0
